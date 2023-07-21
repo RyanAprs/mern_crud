@@ -10,18 +10,24 @@ const AddProduct = () => {
 
     const saveProduct = async (e) => {
         e.preventDefault();
-
-        try {
-            await axios.post("http://localhost:5000/products", {
-                name,
-                stock,
-                price
-            });
-            navigate("/");
-        } catch (error) {
-            console.log(error);
+      
+        if (!name || !stock || !price) {
+          console.log('Data harus diisi lengkap');
+          return;
         }
-    };
+      
+        try {
+          await axios.post("http://localhost:5000/products", {
+            name,
+            stock,
+            price
+          });
+          navigate("/");
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      
 
     return (
         <div className='columns mt-5'>

@@ -10,9 +10,9 @@ export const getProduct = async (req, res) => {
 }
 
 export const addProduct = async (req, res) => { 
-    const name = req.headers.name;
-    const stock = req.headers.stock;
-    const price = req.headers.price;
+    const name = req.body.name;
+    const stock = req.body.stock;
+    const price = req.body.price;
 
     try {
         await Product.create({
@@ -51,9 +51,9 @@ export const updateProduct = async (req, res) => {
             return res.json({msg: 'Product not found'});
         } 
 
-        const name = req.headers.name;
-        const stock = req.headers.stock;
-        const price = req.headers.price;
+        const name = req.body.name;
+        const stock = req.body.stock;
+        const price = req.body.price;
 
         try {
             await Product.update({
