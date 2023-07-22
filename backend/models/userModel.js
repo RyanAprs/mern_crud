@@ -20,12 +20,9 @@ const User = db.define("users", {
             isEmail: true
         }
     },
-    password: {
-        type: DataTypes.STRING,
+    hashedPassword: {
+        type: DataTypes.STRING, 
         allowNull: false,
-        validate: {
-            notEmpty: true,
-        }
     }
 }, {
     freezeTableName: true, 
