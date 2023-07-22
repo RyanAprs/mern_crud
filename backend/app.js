@@ -1,12 +1,28 @@
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser'; 
-import router from './routes/productRoute.js';
+import productRoute from './routes/productRoute.js';
+import session from 'express-session';
+import dotenv from 'dotenv'
+dotenv.config();
 
 const app = express();
 
-app.use(cors());
-app.use(bodyParser.json()); 
-app.use(router);
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        secure: 'auto'
+    }
+}));
 
-app.listen(5000, () => console.log('server run and up...'));
+app.use(cors({
+    credentials: true,
+    origin: 'http://localhost:3000'
+}));
+
+app.use(bodyParser.json()); 
+app.use(productRoute);
+
+app.listen(process.env.PORT, () => console.log('server run and up...'));
