@@ -4,10 +4,15 @@ import bodyParser from 'body-parser';
 import db from './config/Connect.js';
 import session from 'express-session';
 import SequelizeStore from 'connect-session-sequelize';
-import dotenv from 'dotenv'
+import dotenv from 'dotenv';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import cookieParser from 'cookie-parser';
+
+
 import productRoute from './routes/productRoute.js';
 import userRoute from './routes/userRoute.js';
-import authRoute from './routes/authRoute.js';
+
 
 dotenv.config();
 
@@ -30,15 +35,17 @@ app.use(session({
 }));
 
 app.use(cors({
-    credentials: true,
-    origin: 'http://localhost:3000'
+    origin: 'http://localhost:3000',
+    methods: ["GET", "POST"],
+    credentials: true
 }));
 
 app.use(bodyParser.json()); 
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
 app.use(productRoute);
 app.use(userRoute);
-app.use(authRoute);
+
 
 // store.sync();
 
