@@ -1,28 +1,27 @@
 import React, {useState} from 'react'
-import { Link,  useNavigate} from 'react-router-dom'
+import { Link, useNavigate} from 'react-router-dom'
 import axios from 'axios';
 
 
 function Login() {
-  const [values, setValues] = useState({
-    email: '',
-    password: ''
-})
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [msg, setMsg] = useState('');
+  const navigate = useNavigate();
 
-const navigate = useNavigate();
-
-const handleSubmit = (event) => {
-  event.preventDefault();
-
-  axios.post("http://localhost:5000/login", values)
-  .then(res => {
-    if(res.data.Status === 'Success') {
-        navigate("/home")
-    } else {
-      alert(res.data.Error)
+  const Auth = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post("http://localhost:5000/login", {
+        email: email,
+        password: password,
+      })
+      navigate("/dashboard")
+    } catch (error) {
+      if(error.response) {
+        setMsg(error.response.data.msg)
+      }
     }
-  })
-  .then(err => console.log(err))
 }
 
   return (
@@ -35,32 +34,27 @@ const handleSubmit = (event) => {
                 <div className="card-body p-5">
                   <h2 className="text-uppercase text-center mb-4"><strong>Sing-In</strong></h2>
 
-                  <form onSubmit={handleSubmit}>
-
+                  <form onSubmit={Auth}>
+                    <p className='text-center'>{msg}</p>
                     <div className="form-outline mb-3">
                       <label className="form-label" htmlFor="email"> Email</label>
-                      <input type="email" id="email" className="form-control form-control-lg"
-                        onChange={e => setValues({...values, email: e.target.value})}
+                      <input type="email" id="email" 
+                        value={email} onChange={(e) => setEmail(e.target.value)}
+                        className="form-control form-control-lg"
                       />
                     </div>
 
                     <div className="form-outline mb-3">
                       <label className="form-label" htmlFor="passeord">Password</label>
-                      <input type="password" id="passeord" className="form-control form-control-lg" 
-                          onChange={e => setValues({...values, password: e.target.value})}
+                      <input type="password" id="passeord" 
+                        value={password} onChange={(e) => setPassword(e.target.value)}
+                      className="form-control form-control-lg" 
                       />
-                    </div>
-
-                    <div className="form-check d-flex justify-content-center mb-3">
-                      <input className="form-check-input me-2" type="checkbox" value="" id="form2Example3cg" />
-                      <label className="form-check-label" >
-                        I agree all statements in <a href="#!" className="text-body"><u>Terms of service</u></a>
-                      </label>
                     </div>
 
                     <div className="d-flex justify-content-center">
                       <button type="submit"
-                        className="btn btn-success btn-block btn-lg gradient-custom-4 text-body w-100">Login</button>
+                        className="btn btn-success btn-block btn-lg gradient-custom-4 text-body w-100 mt-3">Login</button>
                     </div>
 
                     <p className="text-center text-muted mt-3 mb-0">Do not an account? <Link to="/register"

@@ -17,25 +17,25 @@ export const Register = async (req, res) => {
     const {username, email, password, confirmPassword} = req.body;
 
     if(!username || !email || !password || !confirmPassword) {
-        return res.json({Error: "Please enter all required fields"})
+        return res.status(400).json({msg: "Please enter all required fields"})
     }
 
     if(password !== confirmPassword) {
-        return res.json({Error: "Password did not match"})
+        return res.status(400).json({msg: "Password did not match"})
     }
 
     if(password.length < 6) {
-        return res.json({Error: "Password must be at least 6 characters"})
+        return res.status(400).json({msg: "Password must be at least 6 characters"})
     }
 
-    const user = await Users.findAll({
+    const user = await Users.findOne({
         where: {
             email: req.body.email
         }
     })
 
     if(user) {
-        return res.json({Error: "User already exists"})
+        return res.status(404).json({msg: "User already exist"})
     }
 
     const salt = await bcrypt.genSalt();
@@ -54,6 +54,12 @@ export const Register = async (req, res) => {
 }
 
 export const Login = async (req, res) => {
+    const {email, password} = req.body;
+
+    if(!email || !password) {
+        return res.status(400).json({msg: "Please enter all required fields"})
+    }
+
     try {
         const user  = await Users.findAll({
             where: {
@@ -61,7 +67,7 @@ export const Login = async (req, res) => {
             }
         })
         const match = await bcrypt.compare(req.body.password, user[0].password)
-        if(!match) return res.json({Error: "Wrong password "})
+        if(!match) return res.status(400).json({msg: "Wrong password "})
 
         const userId = user[0].id;
         const username = user[0].username;
@@ -92,7 +98,7 @@ export const Login = async (req, res) => {
                         token: accessTOken
                     })
     } catch (error) {
-        res.json({Error: "Email not found"})
+        res.status(404).json({msg: "User is not already exist"})
     }
 }
 
@@ -106,7 +112,7 @@ export const Logout = async (req, res) => {
             }
         });
 
-        if(!user[0]) return res.res.sendStatus(204);
+        if(!user[0]) return res.sendStatus(204);
         const userId = user[0].id;
         await Users.update({refresh_token: null}, {
             where: {

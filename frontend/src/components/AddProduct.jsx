@@ -71,7 +71,7 @@ const AddProduct = () => {
                     </div>
                     <div className='field'>
                         <div className='control'>
-                            <button type="submit" className='button is-success'>Save</button>
+                            <button type="submit" className='button is-success'>Add</button>
                         </div>
                     </div>
                 </form>

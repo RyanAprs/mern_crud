@@ -11,13 +11,12 @@ export const App = () => {
     <BrowserRouter>
       <div className='container'>
         <Routes>
-          <Route path="/home" element={<ProductList />} />
-          <Route path="/home/add" element={<AddProduct />} />
-          <Route path="/home/edit/:id" element={<EditProduct />} />
-
+          <Route path="/" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
 
+          <Route path="/dashboard" element={<ProductList />} />
+          <Route path="/dashboard/add" element={<AddProduct />} />
+          <Route path="/dashboard/edit/:id" element={<EditProduct />} />
         </Routes>
       </div>
     </BrowserRouter>
