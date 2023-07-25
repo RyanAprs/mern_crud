@@ -22,7 +22,7 @@ const AddProduct = () => {
             stock,
             price
           });
-          navigate("/");
+          navigate("/home");
         } catch (error) {
           console.log(error);
         }

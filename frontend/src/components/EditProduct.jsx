@@ -11,7 +11,7 @@ const EditProduct = () => {
   
     useEffect(() => {
       getProductById();
-    },[]);
+    });
   
     const getProductById = async () => {
       try {
@@ -33,7 +33,7 @@ const EditProduct = () => {
                 stock,
                 price
             });
-            navigate("/")
+            navigate("/home")
         } catch (error) {
             console.log(error)
         }

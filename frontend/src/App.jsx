@@ -5,7 +5,6 @@ import AddProduct from './components/AddProduct';
 import EditProduct from './components/EditProduct';
 import Register from './pages/Register';
 import Login from './pages/Login';
-import Navbar from './components/Navbar';
 
 export const App = () => {
   return (
@@ -19,7 +18,6 @@ export const App = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
 
-          <Route path="/nav" element={<Navbar />} />
         </Routes>
       </div>
     </BrowserRouter>

@@ -4,19 +4,18 @@ import { Link } from 'react-router-dom';
 
 const HomePage = () => {
     const [product, setProduct] = useState([]);
-    const [auth, setAuth] = useState(false);
-    const [message, setMessage] = useState('');
+    // const [auth, setAuth] = useState(false);
     const [username, setUsername] = useState('');
 
+
+
     useEffect(() => {
-        axios.get("/")
+        axios.get("http://localhost:5000/login")
         .then(res => {
           if(res.data.Status === "Success") {
-            setAuth(true);
             setUsername(res.data.username)
           } else {
-            setAuth(false);
-            setMessage(res.data.Error)
+            console.log(res.data.Error)
           }
         })
         .then(err => console.log(err))
@@ -45,13 +44,11 @@ const HomePage = () => {
 
     return (
     <div>
-        {
-            auth ? 
             <div>
-                <nav class="navbar navbar-light bg-light justify-content-between">
+                <nav className="navbar navbar-light bg-light justify-content-between">
                     <a href="/home" className="navbar-brand">{username}</a>
-                    <form class="form-inline">
-                        <button onClick={handleLogout} class="btn btn-outline-danger my-2 my-sm-0" type="submit">Logout</button>
+                    <form className="form-inline">
+                        <button onClick={handleLogout} className="btn btn-outline-danger my-2 my-sm-0" type="submit">Logout</button>
                     </form>
                 </nav>
 
@@ -87,6 +84,7 @@ const HomePage = () => {
                                                     Delete
                                                 </button>
                                             </td>
+                                            
                                         </tr>
                                     ))}
                                 </tbody>
@@ -94,12 +92,6 @@ const HomePage = () => {
                         </div>
                     </div> 
             </div>
-            :
-            <div>
-                <h1 className="text-center color-black">404 Not Found</h1>
-                <h3>{message}</h3>
-            </div>
-        }  
     </div>
 
     )
