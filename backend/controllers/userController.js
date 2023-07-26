@@ -1,124 +1,47 @@
-import Users from "../models/userModel.js";
-import bcrypt from "bcrypt"
-import jwt from "jsonwebtoken"
+const  User  = require ("../models/userModel")
+const  jwt = require ("jsonwebtoken")
 
-export const getUsers = async (req, res) => {
-    try {
-        const users = await Users.findAll({
-            attributes: ['id', 'username', 'email']
-        });
-        return res.json(users);
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-export const Register = async (req, res) => {
-    const {username, email, password, confirmPassword} = req.body;
-
-    if(!username || !email || !password || !confirmPassword) {
-        return res.status(400).json({msg: "Please enter all required fields"})
-    }
-
-    if(password !== confirmPassword) {
-        return res.status(400).json({msg: "Password did not match"})
-    }
-
-    if(password.length < 6) {
-        return res.status(400).json({msg: "Password must be at least 6 characters"})
-    }
-
-    const user = await Users.findOne({
-        where: {
-            email: req.body.email
-        }
+const createToken = (_id) => {
+    return jwt.sign({_id}, process.env.SECRET, {
+        expiresIn: '1d'
     })
+}
 
-    if(user) {
-        return res.status(404).json({msg: "User already exist"})
-    }
-
-    const salt = await bcrypt.genSalt();
-    const hashPassword = await bcrypt.hash(password, salt)
-
+// signup a user
+const signupUser = async (req, res) => {
+    const {username, email, password} = req.body
+  
     try {
-        await Users.create({
-            username: username,
-            email: email,
-            password: hashPassword
-        })
-        res.json({msg: "Register successfully"})
+      const user = await User.signup(username, email, password)
+  
+      // create a token
+      const id = user._id
+      const token = createToken(user._id)
+  
+      res.status(200).json({id, username, email, token})
     } catch (error) {
-        console.log(error)
+      res.status(400).json({error: error.message})
     }
-}
+  }
+  
 
-export const Login = async (req, res) => {
-    const {email, password} = req.body;
+// login a user
+const loginUser = async (req, res) => {
 
-    if(!email || !password) {
-        return res.status(400).json({msg: "Please enter all required fields"})
-    }
-
+    const {email, password} = req.body
+  
     try {
-        const user  = await Users.findAll({
-            where: {
-                email: req.body.email
-            }
-        })
-        const match = await bcrypt.compare(req.body.password, user[0].password)
-        if(!match) return res.status(400).json({msg: "Wrong password "})
-
-        const userId = user[0].id;
-        const username = user[0].username;
-        const email = user[0].email;
-        const accessTOken = jwt.sign({userId, username, email}, process.env.ACCESS_TOKEN_SECRET, {
-            expiresIn: '30s'
-        })
-        const refreshToken = jwt.sign({userId, username, email}, process.env.REFRESH_TOKEN_SECRET, {
-            expiresIn: '1d'
-        })
-
-        await Users.update({refresh_token: refreshToken}, {
-            where: {
-                id: userId
-            }
-        })
-
-        res.cookie('refreshToken', refreshToken, {
-            httpOnly: true,
-            maxAge: 24 * 60 * 60 * 1000,
-        })
-        
-        return res.json({
-                        msg: "Login successfully",
-                        id: userId, 
-                        name: username,  
-                        email: email,
-                        token: accessTOken
-                    })
+      const user = await User.login(email, password)
+  
+      // create a token
+      const id=user._id
+      const token = createToken(user._id)
+  
+      res.status(200).json({id, email, token})
     } catch (error) {
-        res.status(404).json({msg: "User is not already exist"})
+      res.status(400).json({error: error.message})
     }
-}
+  }
 
-export const Logout = async (req, res) => {
-    const refreshToken = req.cookies.refreshToken;
-        if(!refreshToken) return res.sendStatus(204);
 
-        const user = await Users.findAll({
-            where: {
-                refresh_token: refreshToken
-            }
-        });
-
-        if(!user[0]) return res.sendStatus(204);
-        const userId = user[0].id;
-        await Users.update({refresh_token: null}, {
-            where: {
-                id: userId
-            }
-        })
-        res.clearCookie('refreshToken');
-        return res.sendStatus(200);
-}
+module.exports = {signupUser, loginUser}

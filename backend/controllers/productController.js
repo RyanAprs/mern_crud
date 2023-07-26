@@ -1,6 +1,6 @@
-import Product from '../models/productModel.js'
+const  Product = require('../models/productModel.js')
 
-export const getProduct = async (req, res) => {
+const getProduct = async (req, res) => {
     try {
         const result = await Product.findAll()
         res.json(result)
@@ -9,7 +9,7 @@ export const getProduct = async (req, res) => {
     }
 }
 
-export const addProduct = async (req, res) => { 
+const addProduct = async (req, res) => { 
     const name = req.body.name;
     const stock = req.body.stock;
     const price = req.body.price;
@@ -27,7 +27,7 @@ export const addProduct = async (req, res) => {
     }
 }
 
-export const getProductById = async (req, res) => {
+const getProductById = async (req, res) => {
     try {
         const result = await Product.findOne({
             where: {
@@ -40,7 +40,7 @@ export const getProductById = async (req, res) => {
     }
 }
 
-export const updateProduct = async (req, res) => {
+const updateProduct = async (req, res) => {
         const product = await Product.findOne({
             where: {
                 id: req.params.id
@@ -72,7 +72,7 @@ export const updateProduct = async (req, res) => {
         }
 }
 
-export const deleteProduct = async (req, res) => {
+const deleteProduct = async (req, res) => {
     const product = await Product.findOne({
         where: {
             id: req.params.id
@@ -94,3 +94,5 @@ export const deleteProduct = async (req, res) => {
         console.log(error);
     }
 }
+
+module.exports = {getProduct, addProduct, getProductById, updateProduct, deleteProduct} 

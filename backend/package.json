@@ -1,7 +1,6 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "type": "module",
   "description": "",
   "main": "app.js",
   "scripts": {
@@ -21,8 +20,10 @@
     "express-async-handler": "^1.2.0",
     "express-session": "^1.17.3",
     "jsonwebtoken": "^9.0.1",
+    "mongoose": "^7.4.1",
     "mysql": "^2.18.1",
     "mysql2": "^3.5.2",
-    "sequelize": "^6.32.1"
+    "sequelize": "^6.32.1",
+    "validator": "^13.9.0"
   }
 }

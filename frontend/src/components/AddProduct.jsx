@@ -17,7 +17,7 @@ const AddProduct = () => {
         }
       
         try {
-          await axios.post("http://localhost:5000/products", {
+          await axios.post("http://localhost:5000/api/product", {
             name,
             stock,
             price

@@ -18,11 +18,12 @@ const HomePage = () => {
 
     const refreshToken = async() => {
         try {
-            const response = await axios.get("http://localhost:5000/token");
-            setToken(response.data.accessToken);
-            const decoded = jwt_decode(response.data.accessToken);
-            setUsername(decoded.name)
-            setExpire(decoded.exp);
+            const response = await axios.get("http://localhost:5000/token"); 
+            setToken(response);
+            console.log(response);
+            // const decoded = jwt_decode(response.data.accessToken);
+            // setUsername(decoded.name)
+            // setExpire(decoded.exp);
         } catch (error) {
             if(error.response) {
                 console.log(error.response)
